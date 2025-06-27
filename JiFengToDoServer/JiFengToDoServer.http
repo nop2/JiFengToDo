@@ -1,0 +1,6 @@
+@JiFengToDoServer_HostAddress = http://localhost:5143
+
+GET {{JiFengToDoServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
