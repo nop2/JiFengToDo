@@ -1,13 +1,194 @@
-﻿<UserControl x:Class="JiFengToDo.Views.MemoView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:JiFengToDo.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="JiFengToDo.Views.MemoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:JiFengToDo.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    FontFamily="微软雅黑"
+    mc:Ignorable="d">
     <Grid>
-        <TextBlock FontSize="50" Text="Memo" />
+        <md:DrawerHost IsRightDrawerOpen="{Binding IsDrawerOpen}">
+            <md:DrawerHost.RightDrawerContent>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel
+                        Width="300"
+                        Margin="15"
+                        Orientation="Vertical">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="22"
+                            FontWeight="Bold"
+                            Text="添加待办" />
+                        <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="状态：" />
+                            <ComboBox MinWidth="50" SelectedIndex="0">
+                                <ComboBox.Items>
+                                    <ComboBoxItem Content="备忘录" />
+                                    <ComboBoxItem Content="已完成" />
+
+                                </ComboBox.Items>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <TextBox
+                            Margin="0,20,0,0"
+                            md:HintAssist.Hint="请输入备忘录概要"
+                            md:TextFieldAssist.HasClearButton="True" />
+
+                        <TextBox
+                            MinHeight="150"
+                            MaxHeight="200"
+                            Margin="0,20,0,0"
+                            VerticalContentAlignment="Top"
+                            md:HintAssist.Hint="请输入备忘录内容"
+                            md:TextFieldAssist.HasClearButton="True"
+                            TextWrapping="WrapWithOverflow" />
+
+                        <Button
+                            Margin="0,10,0,0"
+                            Content="添加到待办"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignFlatSecondaryButton}" />
+
+                    </StackPanel>
+                </ScrollViewer>
+            </md:DrawerHost.RightDrawerContent>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+
+                <DockPanel
+                    Grid.Row="0"
+                    Margin="5"
+                    LastChildFill="False">
+                    <StackPanel
+                        Margin="10"
+                        DockPanel.Dock="Left"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Text="搜索：" />
+                        <TextBox
+                            MinWidth="150"
+                            Margin="5,0,10,0"
+                            md:HintAssist.Hint="查找备忘录..."
+                            md:TextFieldAssist.HasClearButton="True"
+                            FontSize="14" />
+                        <TextBlock
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Text="筛选：" />
+                        <ComboBox
+                            MinWidth="100"
+                            FontSize="14"
+                            SelectedIndex="0">
+                            <ComboBox.Items>
+                                <ComboBoxItem Content="全部" />
+                                <ComboBoxItem Content="待办" />
+                                <ComboBoxItem Content="已完成" />
+                            </ComboBox.Items>
+                        </ComboBox>
+
+                    </StackPanel>
+
+                    <Button
+                        Margin="0,0,10,0"
+                        Command="{Binding AddCommand}"
+                        Content="+添加备忘录"
+                        DockPanel.Dock="Right" />
+                </DockPanel>
+
+
+                <ScrollViewer Grid.Row="1" Margin="10">
+                    <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding MemoDtos}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <md:TransitioningContent OpeningEffect="{md:TransitionEffect Kind=ExpandIn}">
+                                    <Border
+                                        Width="250"
+                                        MinHeight="150"
+                                        MaxHeight="200"
+                                        Margin="8"
+                                        Background="#1E90FF"
+                                        CornerRadius="5">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+
+                                            </Grid.RowDefinitions>
+
+                                            <DockPanel
+                                                Grid.Row="0"
+                                                Margin="5"
+                                                LastChildFill="False">
+                                                <TextBlock
+                                                    DockPanel.Dock="Left"
+                                                    FontSize="16"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding Title}" />
+                                                <md:PopupBox DockPanel.Dock="Right">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Button Content="删除" />
+                                                    </StackPanel>
+                                                </md:PopupBox>
+                                            </DockPanel>
+
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Margin="5,0,5,2"
+                                                Text="{Binding Content}"
+                                                TextAlignment="Justify" />
+
+                                            <Canvas Grid.Row="1" ClipToBounds="True">
+                                                <Rectangle
+                                                    Canvas.Top="50"
+                                                    Canvas.Right="-10"
+                                                    Width="80"
+                                                    Height="80"
+                                                    Fill="White"
+                                                    Opacity="0.1" />
+                                                <Rectangle
+                                                    Canvas.Top="80"
+                                                    Canvas.Right="20"
+                                                    Width="80"
+                                                    Height="80"
+                                                    Fill="White"
+                                                    Opacity="0.1" />
+
+                                            </Canvas>
+
+                                        </Grid>
+                                    </Border>
+                                </md:TransitioningContent>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+                </ScrollViewer>
+
+            </Grid>
+
+        </md:DrawerHost>
 
     </Grid>
 </UserControl>
