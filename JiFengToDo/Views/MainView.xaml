@@ -21,6 +21,7 @@
     mc:Ignorable="d">
     <Grid>
         <materialDesign:DialogHost
+            Background="{DynamicResource MaterialDesign.Brush.Primary}"
             DialogTheme="Inherit"
             Identifier="RootDialog"
             SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
